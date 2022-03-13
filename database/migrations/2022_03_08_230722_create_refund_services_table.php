@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('refund_services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->unsignedBigInteger('refund_id')->nullable();
+            $table->unsignedBigInteger('service_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('refund_id')->references('id')->on('refunds');
+            $table->foreign('service_id')->references('id')->on('services');
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('refund_services');
     }
 };
