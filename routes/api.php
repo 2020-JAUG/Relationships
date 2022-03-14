@@ -23,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('countries', [HomeController::class, 'countries'])->name('getAllCountries');
 Route::get('continents', [HomeController::class, 'continents'])->name('getAllContinents');
 Route::get('profiles', [HomeController::class, 'profiles'])->name('getAllProfiles');
+Route::get('collections', [HomeController::class, 'collections'])->name('collections');

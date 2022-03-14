@@ -433,7 +433,11 @@
     <div class="card">
         <div class="card-body">
             <div class="">
-                @foreach ($countries as $country)
+
+                @foreach ($products as $product)
+                    {{ $product }}
+                @endforeach
+                {{-- @foreach ($countries as $country)
                     @foreach ($country->posts as $post)
                         <div class="card border-primary mb-3 max-w-6xl mx-auto sm:px-6 lg:px-8">
                             <div class="py-4">
@@ -446,7 +450,7 @@
                             </div>
                         </div>
                     @endforeach
-                @endforeach
+                @endforeach --}}
             </div>
         </div>
     </div>
