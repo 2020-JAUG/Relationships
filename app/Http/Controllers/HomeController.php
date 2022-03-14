@@ -4,14 +4,65 @@ namespace App\Http\Controllers;
 
 use App\Models\Continent;
 use App\Models\Country;
+use App\Models\Product;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 
 class HomeController extends Controller
 {
-    /*--------------------- VISTA VIEW ----------------*/
+    /*--------------------- VISTA VIEW  CARGA ARCHIVO TXT----------------*/
     public function index()
+    {
+        // $products = collect([]);
+
+        // //Cargamos el txt en modo lectura
+        // $handle = fopen(public_path('products.txt'), 'r');
+
+        // //Recorro todos los registros que son 100
+        // while (($line = fgets($handle)) !== false) { //Obtengo una unica linea y hago push al la collection vacia
+        //     $products->push($line);
+        // }
+
+        // //Recorremos con un map todas las lineas y aplico el metodo upperCase
+        // $products = $products->map(function ($product) {
+        //     return strtoupper($product);
+        // })->take(1000);
+
+        // $data = [
+        //     'title' => 'Home Page',
+        //     'products' => $products
+        // ];
+        // return view('welcome', $data);
+
+
+        /*--------------------- VISTA VIEW CARGA LAZY COLLECTION TXT----------------*/
+        //Creo la lazyCollection y dentro de ella un generador
+        $products = LazyCollection::make(function () {
+            $handle = fopen(public_path('products.txt'), 'r');
+
+            while (($line = fgets($handle)) !== false) {
+                yield $line; //Esta es la sintaxis del generador
+            }
+        })->map(function ($product) { //Mapeo los productos
+            return strtoupper($product);
+        })->take(1000);
+
+        $data = [
+            'title' => 'Home Page',
+            'products' => $products
+        ];
+
+        return view('welcome', $data);
+    }
+
+
+
+
+
+    /*--------------------- VISTA VIEW ----------------*/
+    public function indexx()
     {
         // Session::put('activeNav', 'home');
 
@@ -80,6 +131,11 @@ class HomeController extends Controller
         return response()->json($continents);
     }
 
+    /**
+     * eager loading
+     *
+     * @return void
+     */
     public function profiles()
     {
         $profiles = Profile::with([
@@ -92,4 +148,63 @@ class HomeController extends Controller
 
         return response()->json($profiles);
     }
+
+    public function collections()
+    {
+            // return Product::get()->take(5)->sum('price');
+
+            // return Product::get()->map(function ($product) {
+            //     return $product->title;
+            // });
+
+            //CON PLUCK obtengo el mismo resultado que arriba!
+            // return Product::get()->pluck('title', 'id'); // Sacamos id como clave para los titulos de los registros
+
+            // return Product::get()->where('price', '>', 800);
+            // return Product::get()->where('price', '>', 700) //Function para saber cuanto dinero gane con los productos mayores a 700
+            //     ->map(function ($product) {
+            //         //totalPrice es un campo extra para mostrar en postamn. Cogemos la columna price y la multiplicamos por las cantidades vendidas
+            //         $product->totalPrice = $product->price * $product->quantity;
+
+            //         return $product;
+            //     })
+            //     ->sortByDesc('price')
+            //     ->values()
+            // ->sum('totalPrice') //Nos suma todos los valores de los campos totalPrice
+        ;
+
+        //Usando el metodo mensaje de orden superior Higher Order Messages
+        // return Product::get()->take(5)->map->title;
+        return Product::get()->filter->is_actives;
+    }
+
+
+    /**
+     * Collections
+     *
+     * @return void
+     */
+    // public function collections()
+    // {
+    //Devuelve la suma total de todos los números dentro de la collections = 45
+    // $collections = collect([1, 2, 3, 4, 5, 6, 7, 8, 9])->sum();
+
+    //Devuelve el número total de números dentro del array = 9
+    // $collections = collect([1, 2, 3, 4, 5, 6, 7, 8, 9])->count();
+
+    //Devuelve la media dentro de la collections  'suma_total_de_numeros' => 45  / 'la_suma_de_los_numeros_dentro_del_array' => 9 = 5
+    // $collections = collect([1, 2, 3, 4, 5, 6, 7, 8, 9])->average();
+
+
+    //Comprobar valores dentro del array
+    // return $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9])->contains(9);
+
+
+    //Mezclar arrays
+    // $collections = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    // $collections2 = collect([9, 10, 11]);
+
+    // return $collections->concat($collections2)->unique()->values();
+    // }
 }
