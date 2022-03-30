@@ -151,14 +151,14 @@ class HomeController extends Controller
 
     public function collections()
     {
-            // return Product::get()->take(5)->sum('price');
+        return Product::get()->take(5)->sum('price');
 
-            // return Product::get()->map(function ($product) {
-            //     return $product->title;
-            // });
+        return Product::get()->map(function ($product) {
+            return $product->title;
+        });
 
-            //CON PLUCK obtengo el mismo resultado que arriba!
-            // return Product::get()->pluck('title', 'id'); // Sacamos id como clave para los titulos de los registros
+        // CON PLUCK obtengo el mismo resultado que arriba!
+        return Product::get()->pluck('title', 'id'); // Sacamos id como clave para los titulos de los registros
 
             // return Product::get()->where('price', '>', 800);
             // return Product::get()->where('price', '>', 700) //Function para saber cuanto dinero gane con los productos mayores a 700
